@@ -1,0 +1,43 @@
+image: CHOOSE YOUR IMAGE HERE
+
+default:
+  tags:
+   - gcs-buckets
+
+stages:
+  - init
+  - plan
+  - apply
+
+init:
+  stage: init
+  script:
+    - terraform fmt -check
+    - terraform init
+    - terraform validate
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+plan:
+  stage: plan
+  needs:
+    - init
+  script:
+    - terraform init
+    - terraform plan -out=$CI_PROJECT_DIR/plan.out
+  artifacts:
+    paths:
+      - plan.out
+  rules:
+    - if: '$CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"'
+
+apply:
+  stage: apply
+  script:
+    - terraform init
+    - terraform validate
+    - terraform apply -auto-approve
+  rules:
+    - if: $CI_COMMIT_REF_NAME == "main"
+  when: on_success
+  allow_failure: false

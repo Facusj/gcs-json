@@ -1,0 +1,84 @@
+{
+    "project": "project-id",
+    "bucket_location": "us-east4",
+    "storage_class": "STANDARD",
+    "uniform_bucket_level_access": true,
+    "public_access_prevention": "inherited",
+    "iam_members": [
+      {
+        "roles": [
+          "roles/storage.legacyBucketReader"
+        ],
+        "member": [
+          "serviceAccount:test1@project.iam.gserviceaccount.com",
+          "serviceAccount:test2@project.iam.gserviceaccount.com"
+        ],
+        "path_prefix": "/"
+      },
+      {
+        "roles": [
+          "roles/storage.legacyBucketWriter"
+        ],
+        "member": [
+          "serviceAccount:test1@project.iam.gserviceaccount.com",
+          "serviceAccount:test2@project.iam.gserviceaccount.com"
+        ],
+        "path_prefix": "/"
+      },
+      {
+        "roles": [
+          "roles/storage.objectViewer"
+        ],
+        "member": [
+          "serviceAccount:test1@project.iam.gserviceaccount.com",
+          "serviceAccount:test2@project.iam.gserviceaccount.com"
+        ],
+        "path_prefix": "/"
+      },
+      {
+        "roles": [
+          "roles/storage.objectCreator"
+        ],
+        "member": [
+          "serviceAccount:test1@project.iam.gserviceaccount.com",
+          "serviceAccount:test2@project.iam.gserviceaccount.com"
+        ],
+        "path_prefix": "/"
+      }],
+    "versioning": {
+      "enabled": true
+    },
+    "lifecycle_rules": [
+        {
+          "action": {
+            "type": "Delete"
+          },
+          "condition": {
+            "age": 14,
+            "with_state": "ARCHIVED"
+          }
+        },
+        {
+            "action": {
+              "type": "Delete"
+            },
+            "condition": {
+              "age": 7,
+              "with_state": "ANY",
+              "matches_prefix": "tmp/"
+            }
+        },
+        {
+          "action": {
+            "type": "AbortIncompleteMultipartUpload"
+          },
+          "condition": {
+            "age": 7
+          }
+        }
+    ],
+    "logging": {
+      "log_bucket": "logs-all",
+      "log_object_prefix": "infrastructure/bucket-access-logs/template/"
+    }
+}
