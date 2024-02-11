@@ -1,7 +1,7 @@
 locals {
   department  = "de"
   environment = "dev"
-  name_prefix = "r6-${local.department}-${local.environment}"
+  name_prefix = "${local.department}-${local.environment}"
 
   # project-specific labels
   labels = {
